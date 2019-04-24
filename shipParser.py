@@ -12,54 +12,51 @@ class shipParser(object):
 
         soup = BeautifulSoup(data, "html.parser")
 
-
         wikitables = soup.findAll("table", "wikitable sortable jquery-tablesorter")
-
 
         try:
             with open("shipList.json", "r") as f:
                 try:
-                    craftableShips = json.load(f)
+                    craftableShips = json.load(f) # If updating list
                 except ValueError:
-                    craftableShips = {"N": [], "R": [], "SR": [] , "SSR": []}
+                    craftableShips = {"N": [], "R": [], "SR": [] , "SSR": []} # If file exists but nothing in it
             
         except FileNotFoundError:
-            craftableShips = {"N": [], "R": [], "SR": [] , "SSR": []}
-
+            craftableShips = {"N": [], "R": [], "SR": [] , "SSR": []} # If file does not exist
 
         checker = ShipClassifier()
 
-        table = wikitables[0]
+        table = wikitables[0] # The soup returns several tables (Standard, PR, Collab, Retrofit)
         
-        rows = table.findAll("tr")
+        rows = table.findAll("tr") # Rows of the table
 
-        for i in range(pointer, len(rows), 1):
-            cells = rows[i].findAll("td")
+        for i in range(pointer, len(rows), 1): # Pointer helps remove the looking over of any ships already indexed
+            cells = rows[i].findAll("td") # Cells of the row
 
             shipID = str(cells[0].find(text=True))
             
-            if (shipID == "001" or shipID == "002"):
+            if shipID == "001" or shipID == "002": # Gold and purple bulins
                     continue
 
             shipHref = "/" + str(cells[1].find(text=True))
 
-            if (not checker.craftable(shipHref)):
+            if not checker.craftable(shipHref): # Excludes uncraftable ships
                 continue
             
             shipRarity = str(cells[2].find(text=True))
             
             shipInfo = [shipID, shipHref, shipRarity]
             
-            if (shipRarity == "Normal"):
+            if shipRarity == "Normal":
                 craftableShips["N"].append(shipInfo)
                     
-            elif (shipRarity == "Rare"):
+            elif shipRarity == "Rare":
                 craftableShips["R"].append(shipInfo)
                     
-            elif (shipRarity == "Elite"):
+            elif shipRarity == "Elite":
                 craftableShips["SR"].append(shipInfo)
                     
-            elif (shipRarity == "Super Rare"):
+            elif shipRarity == "Super Rare":
                 craftableShips["SSR"].append(shipInfo)
                 
         pointer = {"pointer": len(rows)}
@@ -69,5 +66,3 @@ class shipParser(object):
         
         with open("shipList.json", "w") as f:
             json.dump(craftableShips, f, indent=2)
-                    
-    

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 class ShipClassifier(object):
 
-
+    # Might come in handy later.
     '''def notePresence(self, shipHref: str):
 
         r = requests.get("https://azurlane.koumakan.jp" + shipHref)
@@ -55,5 +55,3 @@ class ShipClassifier(object):
                         craftable = False
                         
         return craftable
-
-    
