@@ -34,7 +34,9 @@ def main():
             break
 
         results = roll(rolls)
-        print(results)
+        print("\n")
+        for x in results:
+            print(str(x)+ "\n")
         print("\n")
     
 
@@ -54,9 +56,8 @@ def roll(numRolls: int):
         for rarity in rarityResults:
             ship = random.choice(shipList[rarity])
             shipResults.append(ship[1].split("/")[1]) # Names are formatted as href in the file ex : /Nagato
-            
-    print(rarityResults) # TODO - Change this?
-    return shipResults
+
+    return rarityResults, shipResults
         
 
 if __name__ == "__main__":
